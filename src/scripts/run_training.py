@@ -63,19 +63,35 @@ def main():
 
     # Now split each client into train/test indices
     client_train_parts = []
-    client_test_parts = []
+    client_test_parts  = []
 
     for cid, idxs in enumerate(client_parts):
-        train_idx, test_idx = split_client_train_test(
-            idxs=idxs,
+        train_idx, test_idx = split_client_train_test_strict(
+            idxs,
+            full_dataset=full_dataset,
+            test_frac=0.2,
             seed=cid,
-            test_frac=0.2,  # 80/20 split
+            num_classes=10
         )
-        client_train_parts.append(train_idx)
+
+        # FEW-SHOT PART 
+        fewshot_train_idx = make_fewshot(
+            train_idx,
+            full_dataset=full_dataset,
+            shots_per_class=7
+        )
+
+        client_train_parts.append(fewshot_train_idx)          
         client_test_parts.append(test_idx)
 
-    # (Optional) if you had a hyperparam tuner, you could call it here.
-    # For now we skip tune_global_hyperparams to keep this clean.
+
+    tune_global_hyperparams(
+        full_dataset=full_dataset,
+        client_train_parts=client_train_parts,
+        cfg=cfg,
+        make_model_fn=make_model,   # same function you use in client_fn
+    )
+
 
     # -------------------------
     # 3. Build DataLoaders per client
