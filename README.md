@@ -1,6 +1,6 @@
 # clipfs-noniid
 
-# Federated Learning with CLIP Features Under Non-IID and Domain-Shift Scenarios
+# Mitigating Non-IID Effects in Federated Learning through CLIP-based Linear Probing.
 
 This repository provides a unified and modular framework for experimenting with **Federated Learning (FL)** using **frozen CLIP visual embeddings** and **lightweight linear classifier heads**.  
 It supports multiple heterogeneity scenarios, including:
