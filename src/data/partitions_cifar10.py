@@ -81,6 +81,43 @@ def quantity_and_label_skew_split(
 
     raise RuntimeError("Failed to sample a split satisfying min_per_client within max_tries")
 
+def strict_one_class_split(dataset, n_clients):
+    """
+    Assigns exactly one distinct class to each client.
+    Note: If n_clients < n_classes, the remaining classes are DROPPED.
+    """
+    # Handle targets whether they are Tensor or Numpy
+    targets = dataset.targets
+    if isinstance(targets, torch.Tensor):
+        targets = targets.cpu().numpy()
+        
+    unique_classes = np.unique(targets) # [0, 1, 2, 3, 4, 5, 6]
+    
+    if n_clients > len(unique_classes):
+        raise ValueError(f"Cannot assign 1 unique class per client. "
+                         f"Clients ({n_clients}) > Classes ({len(unique_classes)})")
+
+    parts = []
+    print(f"\n--- STRICT SPLIT: 1 CLASS PER CLIENT ---")
+    
+    for i in range(n_clients):
+        target_cls = unique_classes[i]
+        
+        # Get all indices where label == target_cls
+        cls_idx = np.where(targets == target_cls)[0]
+        
+        # Shuffle for randomness in train/test later
+        np.random.shuffle(cls_idx)
+        
+        parts.append(cls_idx)
+        
+        print(f"Client {i} -> Assigned Class {target_cls} only. (n={len(cls_idx)})")
+        
+    print(f"WARNING: Classes {unique_classes[n_clients:]} were dropped and will be unseen.\n")
+    
+    return parts
+    
+
 def split_client_train_test_strict(idxs, full_dataset, test_frac, seed, num_classes):
     """
     Stratified per client:
