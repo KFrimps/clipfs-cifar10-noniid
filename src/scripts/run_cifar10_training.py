@@ -15,7 +15,7 @@ from src.config import CFG
 from src.utils.seed import set_seed
 from src.utils.paths import FEATURES_DIR
 from src.data.features_cifar10 import FeatureDataset
-from src.data.partition_cifar10 import quantity_and_label_skew_split, split_client_train_test
+from src.data.partitions_cifar10 import quantity_and_label_skew_split, split_client_train_test
 from src.models.clip_head import make_model
 from src.fl.client import Client
 from src.fl.server import LogGlobalEvalFedAvg, make_metric_logger
