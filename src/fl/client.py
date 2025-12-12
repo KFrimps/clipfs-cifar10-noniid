@@ -1,4 +1,4 @@
-class CIFARClient(fl.client.NumPyClient):
+class Client(fl.client.NumPyClient):
     def __init__(self, model, train_loader, test_loader, cfg, client_idx):
         self.model = model.to(cfg.device)
         self.trainloader = train_loader
