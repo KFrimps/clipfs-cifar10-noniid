@@ -1,1 +1,1 @@
-# clipfs-cifar10-noniid
+# clipfs-noniid
