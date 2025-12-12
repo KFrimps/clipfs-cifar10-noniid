@@ -1,0 +1,12 @@
+class SimpleClassifier(nn.Module):
+    def __init__(self, input_dim=512, num_classes=10):
+        super().__init__()
+        self.classifier = nn.Linear(input_dim, num_classes)
+
+    def forward(self, x):
+        # x is already the feature vector (Batch, 512)
+        # We assume x is float32
+        return self.classifier(x)
+
+def make_model():
+    return SimpleClassifier(input_dim=512, num_classes=10)
